@@ -2,6 +2,14 @@
 
 The official Node.js wrapper for the Veripy Email Verification API.
 
+## What is Veripy?
+
+Veripy is a powerful, real-time email verification service that helps you maintain a clean email list, improve deliverability, and prevent fraud. It checks for syntax, disposable domains, MX records, and mailbox existence with high precision.
+
+## Getting Started
+
+To get started with Veripy, visit our [official documentation](https://veripy.site/docs) for comprehensive guides and API references.
+
 ## Installation
 
 ```bash

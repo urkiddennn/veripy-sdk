@@ -1,4 +1,4 @@
-import { Copy } from "lucide-react";
+import { Copy, Rocket, Key, Terminal } from "lucide-react";
 import { SiHono } from "react-icons/si";
 import { FaReact, FaNodeJs } from "react-icons/fa";
 import LandingNavbar from "../components/layout/LandingNavbar";
@@ -132,6 +132,44 @@ if (!result.valid) {
             out of the spam folder.
           </p>
         </div>
+
+        {/* Getting Started Guide */}
+        <section className="mb-32 animate-fade-in-up">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-neutral-500 italic mb-10">
+            Getting Started
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="p-6 bg-neutral-900/30 border border-white/5 rounded-md space-y-4 hover:border-white/10 transition-colors">
+              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                <Key className="w-4 h-4 text-emerald-400" />
+              </div>
+              <h3 className="text-sm font-semibold text-white">1. Get API Key</h3>
+              <p className="text-xs text-neutral-500 leading-relaxed font-thin">
+                Sign up for an account and generate your private API key from the dashboard.
+              </p>
+            </div>
+
+            <div className="p-6 bg-neutral-900/30 border border-white/5 rounded-md space-y-4 hover:border-white/10 transition-colors">
+              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                <Terminal className="w-4 h-4 text-emerald-400" />
+              </div>
+              <h3 className="text-sm font-semibold text-white">2. Install SDK</h3>
+              <p className="text-xs text-neutral-500 leading-relaxed font-thin">
+                Install our lightweight SDK in your project using your favorite package manager.
+              </p>
+            </div>
+
+            <div className="p-6 bg-neutral-900/30 border border-white/5 rounded-md space-y-4 hover:border-white/10 transition-colors">
+              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                <Rocket className="w-4 h-4 text-emerald-400" />
+              </div>
+              <h3 className="text-sm font-semibold text-white">3. Verify Email</h3>
+              <p className="text-xs text-neutral-500 leading-relaxed font-thin">
+                Call the verify method to instantly check if an email is valid and safe.
+              </p>
+            </div>
+          </div>
+        </section>
 
         {/* Integration Tabs */}
         <section className="space-y-8">
