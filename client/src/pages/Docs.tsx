@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { RiSpamFill } from "react-icons/ri";
-import { title } from "framer-motion/client";
+
 import { CiClock1 } from "react-icons/ci";
 
 export default function Docs() {
@@ -143,11 +143,10 @@ if (!result.valid) {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`flex items-center gap-2 pb-4 -mb-4 border-b-2 transition-all text-xs uppercase tracking-widest focus:outline-none ${
-                    activeTab === tab
+                  className={`flex items-center gap-2 pb-4 -mb-4 border-b-2 transition-all text-xs uppercase tracking-widest focus:outline-none ${activeTab === tab
                       ? "border-white text-white font-bold"
                       : "border-transparent text-neutral-600 hover:text-neutral-400 font-normal"
-                  }`}
+                    }`}
                 >
                   {examples[tab].icon}
                   {examples[tab].title}
