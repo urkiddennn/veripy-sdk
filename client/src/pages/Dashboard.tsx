@@ -51,7 +51,6 @@ export default function Dashboard() {
       <Navbar
         user={user}
         workspaceName={project?.name}
-        showProjectsLink={true}
       />
 
       <main className="max-w-4xl mx-auto px-6 py-12 space-y-12">
@@ -91,11 +90,10 @@ export default function Dashboard() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-3 text-xs tracking-[0.15em] uppercase transition-all relative ${
-                  activeTab === tab
+                className={`pb-3 text-xs tracking-[0.15em] uppercase transition-all relative ${activeTab === tab
                     ? "text-white font-bold"
                     : "text-neutral-500 hover:text-neutral-300 font-normal"
-                }`}
+                  }`}
               >
                 {tab === "sdk-config" ? "SDK CONFIG" : tab.replace("-", " ")}
                 {activeTab === tab && (
