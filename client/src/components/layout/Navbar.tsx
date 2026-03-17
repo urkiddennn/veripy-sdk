@@ -1,22 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import {
-  Sparkles,
   HelpCircle,
   MessageSquare,
   LogOut,
-  Hexagon,
 } from "lucide-react";
 
 interface NavbarProps {
   user?: any;
   workspaceName?: string;
-  showProjectsLink?: boolean;
 }
 
 export default function Navbar({
   user,
-
-  showProjectsLink = false,
 }: NavbarProps) {
   const navigate = useNavigate();
 
@@ -33,11 +28,7 @@ export default function Navbar({
             className="flex items-center gap-2 group cursor-pointer"
             onClick={() => navigate("/projects")}
           >
-            {showProjectsLink ? (
-              <Hexagon className="w-4 h-4 text-white" />
-            ) : (
-              <Sparkles className="w-4 h-4 text-white fill-white" />
-            )}
+            <img src="/veripy.svg" alt="Veripy Logo" className="w-5 h-5" />
           </div>
         </div>
 

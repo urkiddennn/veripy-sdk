@@ -1,4 +1,3 @@
-import { Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function LandingNavbar() {
@@ -6,8 +5,8 @@ export default function LandingNavbar() {
     <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-background/80 backdrop-blur-md">
       <div className="container max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8  rounded-md flex items-center justify-center">
-            <Shield className="text-white w-5 h-5" />
+          <div className="w-8 h-8 rounded-md flex items-center justify-center">
+            <img src="/veripy.svg" alt="Veripy Logo" className="w-6 h-6" />
           </div>
           <span className="text-md font-bold tracking-tight">Veripy</span>
         </Link>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Shield, Mail, Lock, Github, ArrowRight } from "lucide-react";
+import { Mail, Lock, Github, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -38,9 +38,7 @@ export default function Login() {
       <div className="w-full max-w-100 space-y-8 animate-fade-in-up relative z-10">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-white/5 border border-white/10 rounded-md mb-4 shadow-lg shadow-white/5">
-            <Shield className="text-white w-5 h-5" />
-          </div>
+            <img src="/veripy.svg" alt="Veripy Logo" className="w-6 h-6" />
           <h1 className="text-3xl font-bold tracking-tight text-white">
             Welcome back
           </h1>

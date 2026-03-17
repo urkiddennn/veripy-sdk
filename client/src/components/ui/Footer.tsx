@@ -1,11 +1,11 @@
 import type React from "react";
-import { Shield, Zap } from "lucide-react";
+import { Zap } from "lucide-react";
 const Footer: React.FC = () => {
   return (
     <footer className="mt-auto py-12 border-t border-border">
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-2">
-          <Shield className="text-primary w-6 h-6" />
+          <img src="/veripy.svg" alt="Veripy Logo" className="w-6 h-6" />
           <span className="font-bold">Veripy</span>
         </div>
         <p className="text-sm font-thin text-muted-foreground">

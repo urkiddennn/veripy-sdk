@@ -26,7 +26,11 @@ export default function Docs() {
       code: `import { VeripyClient } from '@veripy/sdk';
 
 const veripy = new VeripyClient({
-  apiKey: process.env.VERIPY_API_KEY
+  apiKey: process.env.VERIPY_API_KEY,
+  config: {
+    spamDetection: true,
+    rateLimit: true
+  }
 });
 
 const result = await veripy.verify('user@email.com');
@@ -44,7 +48,11 @@ if (!result.valid) {
 // Or use in your frontend for instant feedback
 
 const veripy = new VeripyClient({
-  apiKey: import.meta.env.VITE_VERIPY_API_KEY
+  apiKey: import.meta.env.VITE_VERIPY_API_KEY,
+  config: {
+    spamDetection: true,
+    rateLimit: true
+  }
 });
 
 const handleBlur = async (email) => {
@@ -63,7 +71,10 @@ const app = new Hono();
 
 app.post('/signup', async (c) => {
   const { email } = await c.req.json();
-  const veripy = new VeripyClient({ apiKey: c.env.VERIPY_API_KEY });
+  const veripy = new VeripyClient({
+    apiKey: c.env.VERIPY_API_KEY,
+    config: { spamDetection: true, rateLimit: true }
+  });
 
   const { valid } = await veripy.verify(email);
   if (!valid) return c.json({ error: 'Invalid email' }, 400);
@@ -77,7 +88,10 @@ app.post('/signup', async (c) => {
       install: "npm install @veripy/sdk",
       code: `import { VeripyClient } from '@veripy/sdk';
 
-const veripy = new VeripyClient({ apiKey: 'vp_...' });
+const veripy = new VeripyClient({
+  apiKey: 'vp_...',
+  config: { spamDetection: true }
+});
 
 // The SDK automatically blocks automated iteration spam locally
 // so you never waste API requests or hit backend limits!
@@ -101,7 +115,8 @@ for (const email of emailsToTest) {
       code: `import { VeripyClient } from '@veripy/sdk';
 
 const veripy = new VeripyClient({
-  apiKey: process.env.VERIPY_API_KEY
+  apiKey: process.env.VERIPY_API_KEY,
+  config: { rateLimit: true }
 });
 
 const result = await veripy.verify('user@email.com');
