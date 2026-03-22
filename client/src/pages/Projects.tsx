@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Plus, Loader2, Search, Settings } from "lucide-react";
-import { useQuery } from "convex/react";
+import { useQuery, useConvexAuth } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import type { Id } from "../../convex/_generated/dataModel";
 
 // Refactored Components
 import Navbar from "../components/layout/Navbar";
@@ -13,8 +12,9 @@ import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 
 export default function Projects() {
-  const userId = localStorage.getItem("veripy_user_id") as Id<"users"> | null;
-  const user = useQuery(api.users.getUser, { userId: userId ?? undefined });
+  const { isLoading, isAuthenticated } = useConvexAuth();
+  const user = useQuery(api.users.viewer, isAuthenticated ? undefined : "skip");
+  const userId = user?._id;
   const projects = useQuery(api.projects.getProjects, {
     userId: userId ?? undefined,
   });
@@ -34,7 +34,7 @@ export default function Projects() {
     p.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  if (userId && (user === undefined || projects === undefined)) {
+  if (isLoading || (isAuthenticated && user === undefined)) {
     return (
       <div className="h-screen flex items-center justify-center bg-background text-foreground text-xs font-bold uppercase tracking-widest">
         <Loader2 className="w-5 h-5 animate-spin text-neutral-500 mr-2" />

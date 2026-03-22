@@ -9,6 +9,7 @@
  */
 
 import type * as apiKeys from "../apiKeys.js";
+import type * as auth from "../auth.js";
 import type * as crypto from "../crypto.js";
 import type * as disposableDomains from "../disposableDomains.js";
 import type * as http from "../http.js";
@@ -25,6 +26,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   apiKeys: typeof apiKeys;
+  auth: typeof auth;
   crypto: typeof crypto;
   disposableDomains: typeof disposableDomains;
   http: typeof http;

@@ -5,7 +5,8 @@ import { Activity, Zap } from 'lucide-react';
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 export default function OverviewTab({ projectId }: { projectId?: Id<"projects"> }) {
-    const userId = localStorage.getItem('veripy_user_id') as Id<"users"> | null;
+    const user = useQuery(api.users.viewer);
+    const userId = user?._id;
     const stats = useQuery(api.verify.getStats, userId ? { userId, projectId } : "skip");
 
     return (

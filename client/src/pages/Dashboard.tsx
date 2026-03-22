@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Loader2, Hexagon, Clock, Settings } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "convex/react";
+import { useQuery, useConvexAuth } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import RequestsTab from "../components/dashboard/RequestsTab";
@@ -17,11 +17,11 @@ export default function Dashboard() {
   const { projectId } = useParams<{ projectId: Id<"projects"> }>();
   const [activeTab, setActiveTab] = useState<ProjectTab>("requests");
   const navigate = useNavigate();
-  const userId = localStorage.getItem("veripy_user_id") as Id<"users"> | null;
-  const user = useQuery(api.users.getUser, { userId: userId ?? undefined });
+  const { isLoading, isAuthenticated } = useConvexAuth();
+  const user = useQuery(api.users.viewer, isAuthenticated ? undefined : "skip");
   const project = useQuery(api.projects.getProject, { projectId });
 
-  if ((userId && user === undefined) || (projectId && project === undefined)) {
+  if (isLoading || (isAuthenticated && user === undefined) || (projectId && project === undefined)) {
     return (
       <div className="h-screen flex items-center justify-center bg-background text-foreground text-xs font-bold uppercase tracking-widest">
         <Loader2 className="w-5 h-5 animate-spin text-neutral-500 mr-2" />

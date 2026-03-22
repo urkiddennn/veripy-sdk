@@ -4,6 +4,7 @@ import {
   MessageSquare,
   LogOut,
 } from "lucide-react";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 interface NavbarProps {
   user?: any;
@@ -14,8 +15,10 @@ export default function Navbar({
   user,
 }: NavbarProps) {
   const navigate = useNavigate();
+  const { signOut } = useAuthActions();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await signOut();
     localStorage.removeItem("veripy_user_id");
     navigate("/login");
   };

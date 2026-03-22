@@ -3,8 +3,11 @@ import { httpAction, internalMutation } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import { rateLimiter } from "./rateLimit";
 import { v } from "convex/values";
+import { auth } from "./auth";
 
 const http = httpRouter();
+
+auth.addHttpRoutes(http);
 
 // Internal mutation to run rate limiting (rateLimiter.limit requires mutation ctx)
 export const checkRateLimit = internalMutation({

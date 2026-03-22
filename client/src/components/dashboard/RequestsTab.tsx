@@ -6,7 +6,8 @@ import { Search, ChevronDown, ChevronRight, RefreshCw, ShieldCheck, Zap, Loader2
 import Modal from '../ui/Modal';
 
 export default function RequestsTab({ projectId }: { projectId?: Id<"projects"> }) {
-    const userId = localStorage.getItem('veripy_user_id') as Id<"users"> | null;
+    const user = useQuery(api.users.viewer);
+    const userId = user?._id;
     const [searchTerm, setSearchTerm] = useState('');
 
     // Convex queries are reactive, but we can force a "refresh" by changing a dependency

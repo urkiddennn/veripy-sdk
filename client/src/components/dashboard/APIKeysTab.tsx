@@ -9,7 +9,8 @@ export default function APIKeysTab({ projectId }: { projectId?: Id<"projects"> }
     const [isGenerating, setIsGenerating] = useState(false);
     const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
-    const userId = localStorage.getItem('veripy_user_id') as Id<"users"> | null;
+    const user = useQuery(api.users.viewer);
+    const userId = user?._id;
     const apiKeys = useQuery(api.apiKeys.listKeys, userId ? { userId, projectId } : "skip");
     const generateKey = useMutation(api.apiKeys.generateKey);
     const deleteKey = useMutation(api.apiKeys.deleteKey);
