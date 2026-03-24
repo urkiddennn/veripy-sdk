@@ -16,6 +16,12 @@ export interface VeripyConfig {
   rateLimit?: boolean;
 }
 
+const DEFAULT_URL =
+  (typeof process !== "undefined"
+    ? process.env?.VERIPY_URL ||
+      process.env?.NEXT_PUBLIC_VERIPY_URL ||
+      process.env?.VITE_VERIPY_URL
+    : undefined) || "https://lovable-alpaca-951.eu-west-1.convex.site";
 export class VeripyClient {
   private url: string;
   private apiKey: string;
@@ -27,8 +33,14 @@ export class VeripyClient {
   private readonly MAX_SIMILAR_REQUESTS = 3; // Block after 3 similar variations
 
   constructor(options: { url?: string; apiKey: string; config?: VeripyConfig }) {
-    this.url =
-      options.url || "https://lovable-alpaca-951.eu-west-1.convex.site";
+    const url = options.url || DEFAULT_URL;
+
+    if (!url) {
+      throw new Error(
+        "VeripyClient requires a url. Please provide it in the options or set VERIPY_URL environment variable.",
+      );
+    }
+    this.url = url;
 
     if (!options.apiKey) {
       throw new Error("VeripyClient requires an apiKey.");

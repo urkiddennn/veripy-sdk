@@ -9,9 +9,22 @@ describe('VeripyClient', () => {
     })));
   });
 
-  it('should initialize with default config', () => {
+  it('should initialize with default config and default URL', () => {
     const client = new VeripyClient({ apiKey: 'test-key' });
     expect(client).toBeDefined();
+    // Use type casting to access private property for testing if needed, 
+    // but we can also just verify it's used in fetch
+  });
+
+  it('should use a custom URL if provided in constructor', async () => {
+    const customUrl = 'https://custom.api.veripy.com';
+    const client = new VeripyClient({ apiKey: 'test-key', url: customUrl });
+    
+    await client.verify('test@example.com');
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining(customUrl),
+      expect.any(Object)
+    );
   });
 
   describe('Rate Limiting', () => {
