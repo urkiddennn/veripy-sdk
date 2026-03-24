@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuthActions } from "@convex-dev/auth/react";
 import Button from "../components/ui/Button";
 
+
 export default function Signup() {
   const { signIn } = useAuthActions();
 
@@ -11,7 +12,7 @@ export default function Signup() {
       <div className="w-full max-w-100 space-y-8 animate-fade-in-up relative z-10">
         {/* Header */}
         <div className="text-center space-y-2">
-            <img src="/veripy.svg" alt="Veripy Logo" className="w-6 h-6" />
+          <img src="/veripy.svg" alt="Veripy Logo" className="w-6 h-6" />
           <h1 className="text-3xl font-bold tracking-tight text-white">
             Create an account
           </h1>
