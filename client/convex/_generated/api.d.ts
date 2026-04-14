@@ -12,6 +12,7 @@ import type * as apiKeys from "../apiKeys.js";
 import type * as auth from "../auth.js";
 import type * as crypto from "../crypto.js";
 import type * as disposableDomains from "../disposableDomains.js";
+import type * as domainRules from "../domainRules.js";
 import type * as http from "../http.js";
 import type * as projects from "../projects.js";
 import type * as rateLimit from "../rateLimit.js";
@@ -29,6 +30,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   crypto: typeof crypto;
   disposableDomains: typeof disposableDomains;
+  domainRules: typeof domainRules;
   http: typeof http;
   projects: typeof projects;
   rateLimit: typeof rateLimit;

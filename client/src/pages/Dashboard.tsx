@@ -8,10 +8,11 @@ import RequestsTab from "../components/dashboard/RequestsTab";
 import APIKeysTab from "../components/dashboard/APIKeysTab";
 import OverviewTab from "../components/dashboard/OverviewTab";
 import SettingsTab from "../components/dashboard/SettingsTab";
+import DomainRulesTab from "../components/dashboard/DomainRulesTab";
 
 import Navbar from "../components/layout/Navbar";
 
-type ProjectTab = "requests" | "analytics" | "sdk-config" | "settings";
+type ProjectTab = "requests" | "analytics" | "domain-rules" | "sdk-config" | "settings";
 
 export default function Dashboard() {
   const { projectId } = useParams<{ projectId: Id<"projects"> }>();
@@ -85,7 +86,7 @@ export default function Dashboard() {
 
         {/* Project Sub-navigation */}
         <div className="flex items-center gap-6 border-b border-white/5">
-          {(["requests", "analytics", "sdk-config"] as ProjectTab[]).map(
+          {(["requests", "analytics", "domain-rules", "sdk-config"] as ProjectTab[]).map(
             (tab) => (
               <button
                 key={tab}
@@ -108,6 +109,7 @@ export default function Dashboard() {
         <div className="animate-fade-in">
           {activeTab === "requests" && <RequestsTab projectId={projectId} />}
           {activeTab === "analytics" && <OverviewTab projectId={projectId} />}
+          {activeTab === "domain-rules" && <DomainRulesTab projectId={projectId} />}
           {activeTab === "sdk-config" && <APIKeysTab projectId={projectId} />}
           {activeTab === "settings" && <SettingsTab project={project} />}
         </div>

@@ -27,6 +27,15 @@ export default defineSchema({
     })
         .index("by_userId", ["userId"])
         .index("by_slug", ["slug"]),
+        
+    projectDomainRules: defineTable({
+        projectId: v.id("projects"),
+        domain: v.string(),
+        action: v.string(), // "allow" or "block"
+        createdAt: v.number(),
+    })
+        .index("by_project", ["projectId"])
+        .index("by_project_domain", ["projectId", "domain"]),
     
     requests: defineTable({
         projectId: v.optional(v.id("projects")),

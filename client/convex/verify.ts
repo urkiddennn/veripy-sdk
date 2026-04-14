@@ -19,6 +19,7 @@ export const verifyEmail = action({
         timestamp?: number;
     }> => {
         const { email } = args;
+        const keyRecord = args.apiKey ? await ctx.runQuery(api.verify.getKeyRecord, { key: args.apiKey }) : null;
 
         const syntaxValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -30,7 +31,6 @@ export const verifyEmail = action({
             };
 
             // Log if associated with a user
-            const keyRecord = args.apiKey ? await ctx.runQuery(api.verify.getKeyRecord, { key: args.apiKey }) : null;
             if (keyRecord) {
                 await ctx.runMutation(api.verify.logVerification, {
                     userId: keyRecord.userId,
@@ -46,34 +46,73 @@ export const verifyEmail = action({
             return result;
         }
 
-        // 2. Disposable Check + MX Record status (from DB)
         const domain = email.split("@")[1]?.toLowerCase();
-        const domainRecord = domain
-            ? await ctx.runQuery(api.disposableDomains.getDomainRecord, { domain })
-            : null;
-        const isDisposable = domainRecord !== null;
-        const hasMx = isDisposable
-            ? (domainRecord?.hasMx ?? false)  // Use validated DB data for disposable domains
-            : true;                            // Assume real domains have MX (simplified)
-        console.log(`Verifying: ${email}, Domain: ${domain}, isDisposable: ${isDisposable}, hasMx: ${hasMx}`);
+        
+        let report;
 
-        const report = {
-            valid: !isDisposable && hasMx,
-            email,
-            results: {
-                syntax: true,
-                disposable: !isDisposable,
-                mx_records: hasMx,
-                mailbox: true // Simulated
-            },
-            // MX-validated disposable domains score lower (more deceptive)
-            score: !isDisposable ? 0.95 : hasMx ? 0.15 : 0.2,
-            timestamp: Date.now()
-        };
+        // 2. Check Custom Domain Rules (if API key / Project is present)
+        if (keyRecord && keyRecord.projectId && domain) {
+            const rule = await ctx.runQuery(api.domainRules.getRule, { 
+                projectId: keyRecord.projectId, 
+                domain 
+            });
+
+            if (rule) {
+                if (rule.action === "allow") {
+                    report = {
+                        valid: true,
+                        email,
+                        results: { syntax: true, disposable: false, mx_records: true, mailbox: true },
+                        score: 1.0,
+                        timestamp: Date.now()
+                    };
+                } else if (rule.action === "block") {
+                    report = {
+                        valid: false,
+                        email,
+                        results: { syntax: true, disposable: true, mx_records: false, mailbox: false },
+                        score: 0.0,
+                        timestamp: Date.now()
+                    };
+                }
+            }
+        }
+
+        // 3. Fallback to Global Disposable Check + MX Record status (from DB)
+        if (!report) {
+            const domainRecord = domain
+                ? await ctx.runQuery(api.disposableDomains.getDomainRecord, { domain })
+                : null;
+            const isDisposable = domainRecord !== null;
+            const hasMx = isDisposable
+                ? (domainRecord?.hasMx ?? false)  // Use validated DB data for disposable domains
+                : true;                            // Assume real domains have MX (simplified)
+            console.log(`Verifying: ${email}, Domain: ${domain}, isDisposable: ${isDisposable}, hasMx: ${hasMx}`);
+
+            report = {
+                valid: !isDisposable && hasMx,
+                email,
+                results: {
+                    syntax: true,
+                    disposable: !isDisposable,
+                    mx_records: hasMx,
+                    mailbox: true // Simulated
+                },
+                // MX-validated disposable domains score lower (more deceptive)
+                score: !isDisposable ? 0.95 : hasMx ? 0.15 : 0.2,
+                timestamp: Date.now()
+            };
+        }
 
         // Log the verification if associated with a user
-        const keyRecord = args.apiKey ? await ctx.runQuery(api.verify.getKeyRecord, { key: args.apiKey }) : null;
         if (keyRecord) {
+            const isBlockedRule = report.score === 0.0;
+            const isAllowedRule = report.score === 1.0;
+            
+            let reason = report.results.disposable ? undefined : "disposable_email";
+            if (isBlockedRule) reason = "custom_blacklisted";
+            if (isAllowedRule) reason = undefined;
+
             await ctx.runMutation(api.verify.logVerification, {
                 userId: keyRecord.userId,
                 projectId: keyRecord.projectId,
@@ -81,7 +120,7 @@ export const verifyEmail = action({
                 email,
                 valid: report.valid,
                 score: report.score,
-                reason: report.results.disposable ? undefined : "disposable_email", // Basic mapping for now
+                reason, // Updated logic for reason
                 timestamp: report.timestamp
             });
         }
