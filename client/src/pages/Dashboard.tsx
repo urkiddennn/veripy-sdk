@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Loader2, Hexagon, Clock, Settings } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Navigate } from "react-router-dom";
 import { useQuery, useConvexAuth } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -9,10 +9,12 @@ import APIKeysTab from "../components/dashboard/APIKeysTab";
 import OverviewTab from "../components/dashboard/OverviewTab";
 import SettingsTab from "../components/dashboard/SettingsTab";
 import DomainRulesTab from "../components/dashboard/DomainRulesTab";
+import PlaygroundTab from "../components/dashboard/PlaygroundTab";
+import BulkVerifyTab from "../components/dashboard/BulkVerifyTab";
 
 import Navbar from "../components/layout/Navbar";
 
-type ProjectTab = "requests" | "analytics" | "domain-rules" | "sdk-config" | "settings";
+type ProjectTab = "requests" | "playground" | "bulk-verify" | "analytics" | "domain-rules" | "sdk-config" | "settings";
 
 export default function Dashboard() {
   const { projectId } = useParams<{ projectId: Id<"projects"> }>();
@@ -29,6 +31,10 @@ export default function Dashboard() {
         Loading...
       </div>
     );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
   }
 
   if (projectId && project === null) {
@@ -85,13 +91,13 @@ export default function Dashboard() {
         </div>
 
         {/* Project Sub-navigation */}
-        <div className="flex items-center gap-6 border-b border-white/5">
-          {(["requests", "analytics", "domain-rules", "sdk-config"] as ProjectTab[]).map(
+        <div className="flex items-center gap-6 border-b border-white/5 overflow-x-auto no-scrollbar">
+          {(["requests", "playground", "bulk-verify", "analytics", "domain-rules", "sdk-config"] as ProjectTab[]).map(
             (tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-3 text-xs tracking-[0.15em] uppercase transition-all relative ${activeTab === tab
+                className={`pb-3 text-xs tracking-[0.15em] uppercase transition-all relative shrink-0 ${activeTab === tab
                     ? "text-white font-bold"
                     : "text-neutral-500 hover:text-neutral-300 font-normal"
                   }`}
@@ -108,6 +114,8 @@ export default function Dashboard() {
         {/* Content Area */}
         <div className="animate-fade-in">
           {activeTab === "requests" && <RequestsTab projectId={projectId} />}
+          {activeTab === "playground" && <PlaygroundTab projectId={projectId} />}
+          {activeTab === "bulk-verify" && <BulkVerifyTab projectId={projectId} />}
           {activeTab === "analytics" && <OverviewTab projectId={projectId} />}
           {activeTab === "domain-rules" && <DomainRulesTab projectId={projectId} />}
           {activeTab === "sdk-config" && <APIKeysTab projectId={projectId} />}

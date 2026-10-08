@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import Input from './Input';
+import Input from '../../../src/components/ui/Input';
 import { Mail } from 'lucide-react';
 
 describe('Input Component', () => {
@@ -22,10 +22,10 @@ describe('Input Component', () => {
   it('handles onChange events', () => {
     const handleChange = vi.fn();
     render(<Input placeholder="Type here" onChange={handleChange} />);
-    
+
     const input = screen.getByPlaceholderText('Type here');
     fireEvent.change(input, { target: { value: 'hello' } });
-    
+
     expect(handleChange).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect } from 'vitest';
-import Docs from './pages/Docs';
+import Docs from '../../../src/pages/Docs';
 
 describe('Docs Component', () => {
   it('renders without crashing', () => {

@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useConvexAuth } from "convex/react";
 
 export default function LandingNavbar() {
+  const { isAuthenticated } = useConvexAuth();
+
   return (
     <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-background/80 backdrop-blur-md">
       <div className="container max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -17,18 +20,29 @@ export default function LandingNavbar() {
           <Link to="/docs" className="hover:text-foreground transition-colors">
             Documentation
           </Link>
-          <Link
-            to="/login"
-            className="text-sm font-medium hover:text-primary transition-colors"
-          >
-            Log in
-          </Link>
-          <Link
-            to="/signup"
-            className="px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:opacity-90 transition-opacity"
-          >
-            Get Started
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              to="/projects"
+              className="px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:opacity-90 transition-opacity"
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                Log in
+              </Link>
+              <Link
+                to="/signup"
+                className="px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:opacity-90 transition-opacity"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

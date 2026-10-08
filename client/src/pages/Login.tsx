@@ -1,13 +1,29 @@
-import { Github } from "lucide-react";
+import { Github, Loader2 } from "lucide-react";
+import { Navigate } from "react-router-dom";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { useConvexAuth } from "convex/react";
 import Button from "../components/ui/Button";
 
 export default function Login() {
   const { signIn } = useAuthActions();
+  const { isLoading, isAuthenticated } = useConvexAuth();
+
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-black text-white text-xs font-bold uppercase tracking-widest">
+        <Loader2 className="w-5 h-5 animate-spin text-neutral-500 mr-2" />
+        Loading...
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/projects" replace />;
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black p-4 layout-grid">
-      <div className="w-full max-w-100 space-y-8 animate-fade-in-up relative z-10">
+    <div className="min-h-screen flex items-center justify-center bg-black p-4">
+      <div className="w-full max-w-sm space-y-8 animate-fade-in border border-white/5 bg-neutral-900/40 p-8 rounded-lg shadow-2xl">
         {/* Header */}
         <div className="text-center space-y-2">
             <img src="/veripy.svg" alt="Veripy Logo" className="w-6 h-6" />

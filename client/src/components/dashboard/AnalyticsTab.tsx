@@ -49,43 +49,34 @@ export default function AnalyticsTab() {
                 <div className="relative h-[300px] w-full bg-neutral-900/20 border border-white/5 rounded-md p-8 overflow-hidden group">
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={stats.timeSeries}>
-                            <defs>
-                                <filter id="glow-analytics" x="-20%" y="-20%" width="140%" height="140%">
-                                    <feGaussianBlur stdDeviation="3" result="blur" />
-                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                                </filter>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.04)" />
                             <XAxis
                                 dataKey="date"
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fill: '#404040', fontSize: 10, fontWeight: 'bold' }}
+                                tick={{ fill: '#525252', fontSize: 10, fontFamily: 'monospace' }}
                                 tickFormatter={(date: string) => new Date(date).toLocaleDateString('en-US', { weekday: 'short' })}
                                 dy={10}
                             />
                             <Tooltip
                                 contentStyle={{
                                     backgroundColor: '#0a0a0a',
-                                    border: '1px solid rgba(255,255,255,0.05)',
-                                    borderRadius: '6px',
-                                    fontSize: '12px',
-                                    fontWeight: 'bold',
-                                    textTransform: 'uppercase',
-                                    padding: '12px'
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    borderRadius: '4px',
+                                    fontSize: '11px',
+                                    fontFamily: 'monospace',
+                                    padding: '8px 12px'
                                 }}
                                 itemStyle={{ color: '#fff' }}
-                                cursor={{ stroke: 'rgba(255,255,255,0.05)', strokeWidth: 1 }}
+                                cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }}
                             />
                             <Line
                                 type="monotone"
                                 dataKey="count"
-                                stroke="#fff"
-                                strokeWidth={2}
-                                dot={{ fill: '#fff', r: 0 }}
-                                activeDot={{ r: 4, fill: '#fff', stroke: '#000', strokeWidth: 2 }}
-                                filter="url(#glow-analytics)"
-                                animationDuration={2000}
+                                stroke="#ffffff"
+                                strokeWidth={1.5}
+                                dot={false}
+                                activeDot={{ r: 4, fill: '#fff' }}
                             />
                         </LineChart>
                     </ResponsiveContainer>

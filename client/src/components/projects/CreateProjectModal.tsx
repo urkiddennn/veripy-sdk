@@ -10,30 +10,34 @@ import Button from '../ui/Button';
 interface CreateProjectModalProps {
     isOpen: boolean;
     onClose: () => void;
-    userId: Id<"users">;
+    userId?: Id<"users">;
 }
 
 export default function CreateProjectModal({ isOpen, onClose, userId }: CreateProjectModalProps) {
     const navigate = useNavigate();
     const createProject = useMutation(api.projects.createProject);
     const [name, setName] = useState('');
+    const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!name.trim()) return;
 
+        setError(null);
         setIsSubmitting(true);
         try {
             const projectId = await createProject({
-                name,
-                userId,
+                name: name.trim(),
+                ...(userId ? { userId } : {}),
             });
             onClose();
             setName('');
+            setError(null);
             navigate(`/dashboard/${projectId}`);
-        } catch (error) {
-            console.error('Failed to create project:', error);
+        } catch (err: any) {
+            console.error('Failed to create project:', err);
+            setError(err?.message || 'Failed to create project. Please try again.');
         } finally {
             setIsSubmitting(false);
         }
@@ -42,11 +46,19 @@ export default function CreateProjectModal({ isOpen, onClose, userId }: CreatePr
     return (
         <Modal
             isOpen={isOpen}
-            onClose={onClose}
+            onClose={() => {
+                setError(null);
+                onClose();
+            }}
             title="Create new project"
             subtitle="A space for your API keys and analytics"
         >
             <form onSubmit={handleCreate} className="space-y-6">
+                {error && (
+                    <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-md text-red-400 text-xs">
+                        {error}
+                    </div>
+                )}
                 <Input
                     autoFocus
                     label="Project Name"

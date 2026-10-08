@@ -8,10 +8,12 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "test:unit": "vitest run tests/unit"
   },
   "dependencies": {
-    "@convex-dev/auth": "^0.0.91",
+    "@auth/core": "^0.41.3",
+    "@convex-dev/auth": "^0.0.96",
     "@convex-dev/rate-limiter": "^0.3.2",
     "@types/react-syntax-highlighter": "^15.5.13",
     "clsx": "^2.1.1",

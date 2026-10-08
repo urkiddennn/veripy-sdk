@@ -7,7 +7,10 @@ export const getUser = query({
   args: { userId: v.optional(v.id("users")) },
   handler: async (ctx, args) => {
     if (!args.userId) return null;
-    return await ctx.db.get(args.userId);
+    const user = await ctx.db.get(args.userId);
+    if (!user) return null;
+    const { password: _, ...safeUser } = user;
+    return safeUser;
   },
 });
 

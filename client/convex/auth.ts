@@ -3,16 +3,19 @@ import { convexAuth } from "@convex-dev/auth/server";
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [
-    GitHub({
-      authorization: { params: { prompt: "select_account" } },
-      profile(profile) {
-        return {
-          id: profile.id.toString(),
-          name: profile.name ?? profile.login,
-          email: profile.email,
-          image: profile.avatar_url,
-        };
-      },
-    }),
+    {
+      ...GitHub({
+        authorization: { params: { prompt: "select_account" } },
+        profile(profile) {
+          return {
+            id: profile.id.toString(),
+            name: profile.name ?? profile.login,
+            email: profile.email,
+            image: profile.avatar_url,
+          };
+        },
+      }),
+
+    },
   ],
 });

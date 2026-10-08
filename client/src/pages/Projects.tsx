@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus, Loader2, Search, Settings } from "lucide-react";
+import { Navigate } from "react-router-dom";
 import { useQuery, useConvexAuth } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
@@ -41,6 +42,10 @@ export default function Projects() {
         Loading...
       </div>
     );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
   }
 
   return (
@@ -116,13 +121,11 @@ export default function Projects() {
       </main>
 
       {/* Modals */}
-      {userId && (
-        <CreateProjectModal
-          isOpen={isCreateModalOpen}
-          onClose={() => setIsCreateModalOpen(false)}
-          userId={userId}
-        />
-      )}
+      <CreateProjectModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        userId={userId}
+      />
 
       {isSettingsModalOpen && selectedProject && (
         <ProjectSettingsModal

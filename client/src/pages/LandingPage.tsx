@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ArrowRight, ChevronDown, CheckCircle2, Copy } from "lucide-react";
+import { useConvexAuth } from "convex/react";
 import LandingNavbar from "../components/layout/LandingNavbar";
 import FeatureSection from "../components/ui/FeatureSection";
 import Pricing from "../components/ui/Pricing";
@@ -10,6 +11,7 @@ import IconIntegration from "../components/ui/IconsIntegration";
 export default function LandingPage() {
   const [activeAccordion, setActiveAccordion] = useState<number>(0);
   const navigate = useNavigate();
+  const { isAuthenticated } = useConvexAuth();
 
   const accordionFeatures = [
     {
@@ -36,9 +38,9 @@ export default function LandingPage() {
   const handleDocs = () => {
     navigate("/docs");
   };
-  // handle go to signup
+  // handle go to signup or projects
   const handleGoToSignup = () => {
-    navigate("/signup");
+    navigate(isAuthenticated ? "/projects" : "/signup");
   };
 
   return (
@@ -46,48 +48,38 @@ export default function LandingPage() {
       <LandingNavbar />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-full -z-10 opacity-20 pointer-events-none">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-primary rounded-full blur-[128px]" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent rounded-full blur-[128px]" />
-        </div>
-
+      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-white/5">
         <div className="container mx-auto px-4 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-sm font-semibold text-primary mb-6 animate-fade-in">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-            </span>
-            New: Verification Engine v2
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-md text-xs font-mono text-neutral-300 mb-6 animate-fade-in">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+            Verification Engine v2
           </div>
-          <h1 className="text-5xl md:text-6xl font-semibold tracking-tight mb-6 leading-[1.1]">
-            Trust, but{" "}
-            <span className=" italic text-blue-500 font-bold">Verify</span>.
+          <h1 className="text-5xl md:text-6xl font-semibold tracking-tight mb-6 leading-[1.1] text-white">
+            Trust, but Verify.
           </h1>
-          <p className="text-lg md:text-lg font-thin text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Veripy is the fast, high-performance API to protect your application
-            from fake accounts and malicious bots.
+          <p className="text-base md:text-lg text-neutral-400 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
+            High-performance email verification and deliverability API for engineering teams. Protect signups from disposable domains and abusive traffic.
           </p>
-          <div className="w-full flex justify-center mb-5">
-            <div className="px-5 py-2 rounded-full bg-gray-950 flex justify-center items-center max-w-xs mx-auto w-full gap-3">
-              <Copy size={15} /> <p>npm install veripy-sdk</p>
+          <div className="w-full flex justify-center mb-6">
+            <div className="px-4 py-2 rounded-md bg-neutral-900 border border-white/10 flex justify-center items-center max-w-xs mx-auto w-full gap-3 font-mono text-xs text-neutral-300">
+              <Copy size={13} className="text-neutral-500" /> <code>npm install veripy-sdk</code>
             </div>
           </div>
           {/* Icons Integration*/}
           <IconIntegration />
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
-              className="text-sm w-full sm:w-auto px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-full hover:shadow-lg hover:shadow-primary/20 transition-all flex items-center justify-center gap-2 group"
+              className="text-xs uppercase tracking-wider w-full sm:w-auto px-6 py-3 bg-white text-black font-bold rounded-md hover:bg-neutral-200 transition-all flex items-center justify-center gap-2 group"
               onClick={handleGoToSignup}
             >
-              Start Building Now
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              Start Building
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
             <button
-              className=" text-sm  w-full sm:w-auto px-6 py-3 bg-secondary text-secondary-foreground font-semibold rounded-full border border-border hover:bg-border/50 transition-all"
+              className="text-xs uppercase tracking-wider w-full sm:w-auto px-6 py-3 bg-neutral-900 text-white font-bold rounded-md border border-white/10 hover:bg-neutral-800 transition-all"
               onClick={handleDocs}
             >
-              View Documentation
+              Documentation
             </button>
           </div>
         </div>

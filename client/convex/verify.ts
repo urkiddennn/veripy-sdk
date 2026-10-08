@@ -1,13 +1,16 @@
 import { v } from "convex/values";
 import { query, mutation, action } from "./_generated/server";
 import { api } from "./_generated/api";
+import { getAuthUserId } from "@convex-dev/auth/server";
 import * as cryptoHelper from "./crypto";
 
 // Core verification logic
 export const verifyEmail = action({
     args: {
         email: v.string(),
-        apiKey: v.optional(v.string())
+        apiKey: v.optional(v.string()),
+        projectId: v.optional(v.id("projects")),
+        userId: v.optional(v.id("users")),
     },
     handler: async (ctx, args): Promise<{
         valid: boolean;
@@ -20,6 +23,8 @@ export const verifyEmail = action({
     }> => {
         const { email } = args;
         const keyRecord = args.apiKey ? await ctx.runQuery(api.verify.getKeyRecord, { key: args.apiKey }) : null;
+        const effectiveProjectId = keyRecord?.projectId ?? args.projectId;
+        const effectiveUserId = keyRecord?.userId ?? args.userId;
 
         const syntaxValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -30,12 +35,12 @@ export const verifyEmail = action({
                 details: { syntax: false }
             };
 
-            // Log if associated with a user
-            if (keyRecord) {
+            // Log if associated with a user or project
+            if (effectiveUserId) {
                 await ctx.runMutation(api.verify.logVerification, {
-                    userId: keyRecord.userId,
-                    projectId: keyRecord.projectId,
-                    apiKeyId: keyRecord._id,
+                    userId: effectiveUserId,
+                    projectId: effectiveProjectId,
+                    apiKeyId: keyRecord?._id,
                     email,
                     valid: false,
                     score: 0.1,
@@ -51,9 +56,9 @@ export const verifyEmail = action({
         let report;
 
         // 2. Check Custom Domain Rules (if API key / Project is present)
-        if (keyRecord && keyRecord.projectId && domain) {
+        if (effectiveProjectId && domain) {
             const rule = await ctx.runQuery(api.domainRules.getRule, { 
-                projectId: keyRecord.projectId, 
+                projectId: effectiveProjectId, 
                 domain 
             });
 
@@ -104,8 +109,8 @@ export const verifyEmail = action({
             };
         }
 
-        // Log the verification if associated with a user
-        if (keyRecord) {
+        // Log the verification if associated with a user or project
+        if (effectiveUserId) {
             const isBlockedRule = report.score === 0.0;
             const isAllowedRule = report.score === 1.0;
             
@@ -114,9 +119,9 @@ export const verifyEmail = action({
             if (isAllowedRule) reason = undefined;
 
             await ctx.runMutation(api.verify.logVerification, {
-                userId: keyRecord.userId,
-                projectId: keyRecord.projectId,
-                apiKeyId: keyRecord._id,
+                userId: effectiveUserId,
+                projectId: effectiveProjectId,
+                apiKeyId: keyRecord?._id,
                 email,
                 valid: report.valid,
                 score: report.score,
@@ -156,7 +161,14 @@ export const listLogs = query({
         projectId: v.optional(v.id("projects")),
     },
     handler: async (ctx, args) => {
+        const authUserId = await getAuthUserId(ctx);
+        const effectiveUserId = authUserId ?? args.userId;
+
         if (args.projectId) {
+            const project = await ctx.db.get(args.projectId);
+            if (project && authUserId && project.userId !== authUserId) {
+                throw new Error("Unauthorized: You do not have access to this project's logs.");
+            }
             return await ctx.db
                 .query("verificationLogs")
                 .withIndex("by_project", (q) => q.eq("projectId", args.projectId))
@@ -165,7 +177,7 @@ export const listLogs = query({
         }
         return await ctx.db
             .query("verificationLogs")
-            .withIndex("by_user", (q) => q.eq("userId", args.userId))
+            .withIndex("by_user", (q) => q.eq("userId", effectiveUserId))
             .order("desc")
             .take(50);
     },
@@ -177,9 +189,19 @@ export const getStats = query({
         projectId: v.optional(v.id("projects")),
     },
     handler: async (ctx, args) => {
+        const authUserId = await getAuthUserId(ctx);
+        const effectiveUserId = authUserId ?? args.userId;
+
+        if (args.projectId) {
+            const project = await ctx.db.get(args.projectId);
+            if (project && authUserId && project.userId !== authUserId) {
+                throw new Error("Unauthorized: You do not have access to this project's stats.");
+            }
+        }
+
         const logs = await (args.projectId
             ? ctx.db.query("verificationLogs").withIndex("by_project", (q) => q.eq("projectId", args.projectId))
-            : ctx.db.query("verificationLogs").withIndex("by_user", (q) => q.eq("userId", args.userId))
+            : ctx.db.query("verificationLogs").withIndex("by_user", (q) => q.eq("userId", effectiveUserId))
         ).collect();
 
         const total = logs.length;

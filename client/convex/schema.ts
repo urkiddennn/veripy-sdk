@@ -24,6 +24,11 @@ export default defineSchema({
         slug: v.string(),
         userId: v.id("users"),
         createdAt: v.number(),
+        monthlyQuota: v.optional(v.number()),
+        webhookUrl: v.optional(v.string()),
+        webhookEvents: v.optional(v.array(v.string())),
+        webhookSecret: v.optional(v.string()),
+        alertsEnabled: v.optional(v.boolean()),
     })
         .index("by_userId", ["userId"])
         .index("by_slug", ["slug"]),

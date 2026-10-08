@@ -1,22 +1,22 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, vi } from 'vitest';
-import LandingPage from './LandingPage';
+import LandingPage from '../../../src/pages/LandingPage';
 
-// Mock child components that might have complex dependencies or animations
-vi.mock('../components/layout/LandingNavbar', () => ({
+// Mock child components
+vi.mock('../../../src/components/layout/LandingNavbar', () => ({
   default: () => <div data-testid="navbar">Navbar</div>
 }));
-vi.mock('../components/ui/FeatureSection', () => ({
+vi.mock('../../../src/components/ui/FeatureSection', () => ({
   default: () => <div data-testid="feature-section">Features</div>
 }));
-vi.mock('../components/ui/Pricing', () => ({
+vi.mock('../../../src/components/ui/Pricing', () => ({
   default: () => <div data-testid="pricing">Pricing</div>
 }));
-vi.mock('../components/ui/Footer', () => ({
+vi.mock('../../../src/components/ui/Footer', () => ({
   default: () => <div data-testid="footer">Footer</div>
 }));
-vi.mock('../components/ui/IconsIntegration', () => ({
+vi.mock('../../../src/components/ui/IconsIntegration', () => ({
   default: () => <div data-testid="icons">Icons</div>
 }));
 

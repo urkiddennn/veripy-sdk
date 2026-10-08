@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import Button from './Button';
+import Button from '../../../src/components/ui/Button';
 import { Mail } from 'lucide-react';
 
 describe('Button Component', () => {
@@ -24,7 +24,6 @@ describe('Button Component', () => {
     render(<Button loading>Loading...</Button>);
     const button = screen.getByRole('button', { name: /Loading/i });
     expect(button).toBeDisabled();
-    // Loader should be present, not children
     expect(button.querySelector('.animate-spin')).toBeInTheDocument();
   });
 });
